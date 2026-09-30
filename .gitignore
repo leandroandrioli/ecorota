@@ -9,3 +9,5 @@ Thumbs.db
 # Arquivos temporários e logs
 *.log
 *.tmp
+
+node_modules/
