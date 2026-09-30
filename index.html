@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoRota Paranaguá</title>
+  <style>
+    :root {
+      --primary: #003366;
+      --primary-dark: #002244;
+      --success: #1b5e20;
+      --success-bg: #e8f5e9;
+      --error: #d32f2f;
+      --error-bg: #ffebee;
+      --focus-yellow: #ffcc00;
+      --gray-light: #f5f5f5;
+      --gray-border: #cccccc;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #e0e0e0;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 420px;
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      overflow: hidden;
+    }
+
+    header {
+      background-color: var(--primary);
+      color: white;
+      padding: 16px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 1.2rem;
+    }
+
+    header p {
+      font-size: 0.8rem;
+      opacity: 0.9;
+    }
+
+    .offline-banner {
+      background-color: #263238;
+      color: #fff;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .badge-offline {
+      background: #546e7a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+    }
+
+    main {
+      padding: 20px;
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    h2 {
+      color: var(--primary);
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: #555;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: #333;
+    }
+
+    input[type="text"], select {
+      width: 100%;
+      height: 48px;
+      padding: 10px;
+      border: 1px solid var(--gray-border);
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+
+    input:focus, select:focus, button:focus {
+      outline: 3px solid var(--focus-yellow);
+    }
+
+    .input-error {
+      border: 2px solid var(--error) !important;
+      outline: 3px solid var(--focus-yellow) !important;
+    }
+
+    .error-msg {
+      color: var(--error);
+      font-size: 0.8rem;
+      font-weight: bold;
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+    }
+
+    .checkbox-item input {
+      width: 18px;
+      height: 18px;
+    }
+
+    .btn {
+      width: 100%;
+      height: 52px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background-color: var(--gray-light);
+      color: #333;
+      border: 1px solid var(--gray-border);
+    }
+
+    .card {
+      border: 2px solid var(--gray-border);
+      border-radius: 8px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .card.pending {
+      border-color: var(--focus-yellow);
+    }
+
+    .card.done {
+      border-color: #81c784;
+      background-color: #f1f8e9;
+    }
+
+    .status-title {
+      font-weight: bold;
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+
+    .status-pending { color: #b78103; }
+    .status-done { color: var(--success); }
+
+    .btn-concluir {
+      background-color: var(--success);
+      height: 52px;
+      border: 3px solid var(--focus-yellow);
+    }
+
+    .alert-box {
+      background-color: var(--success-bg);
+      border: 1px solid #a5d6a7;
+      padding: 12px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .protocol-box {
+      background-color: var(--gray-light);
+      padding: 12px;
+      text-align: center;
+      border-radius: 6px;
+      margin-bottom: 16px;
+    }
+
+    .protocol-number {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    .details-list {
+      font-size: 0.85rem;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-around;
+      background: #f0f0f0;
+      border-top: 1px solid #ccc;
+    }
+
+    nav button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background: none;
+      font-size: 0.8rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    nav button.active-tab {
+      background: #e0e0e0;
+      border-bottom: 3px solid var(--primary);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <header>
+      <h1>EcoRota Paranaguá</h1>
+      <p>Coleta Seletiva Comunitária — Ilha dos Valadares</p>
+    </header>
+
+    <div class="offline-banner">
+      <span>⚠ Sem sinal de rede. Dados salvos localmente.</span>
+      <span class="badge-offline">Modo Offline</span>
+    </div>
+
+    <main>
+      <!-- TELA 1: FORMULÁRIO -->
+      <section id="screen-1" class="screen active">
+        <h2>Agendar Coleta Seletiva</h2>
+        <p class="subtitle">Preencha os dados abaixo para solicitar o recolhimento gratuito.</p>
+
+        <form id="agendamento-form">
+          <div class="form-group">
+            <label for="bairro">Bairro de Paranaguá *</label>
+            <select id="bairro" required>
+              <option value="Ilha dos Valadares">Ilha dos Valadares (Padrão)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="endereco">Endereço Completo (Rua, Nº, Referência) *</label>
+            <input type="text" id="endereco" value="Rua José Antonio Cruz, 142 - Próx. ao Posto de Saúde" required />
+          </div>
+
+          <div class="form-group">
+            <label for="telefone" style="color: var(--error);">Telefone para Contato (WhatsApp) *</label>
+            <input type="text" id="telefone" class="input-error" value="(41) 9" required />
+            <div class="error-msg">⚠ (Δ) Informe um telefone com DDD para contato (11 dígitos).</div>
+          </div>
+
+          <div class="form-group">
+            <label>Tipos de Resíduos Recicláveis *</label>
+            <div class="checkbox-group">
+              <label class="checkbox-item"><input type="checkbox" checked /> Plástico (Garrafas PET, Embalagens)</label>
+              <label class="checkbox-item"><input type="checkbox" checked /> Papel / Papelão</label>
+              <label class="checkbox-item"><input type="checkbox" /> Metal (Latas, Alumínio)</label>
+              <label class="checkbox-item"><input type="checkbox" /> Vidro (Garrafas, Frascos)</label>
+            </div>
+          </div>
+
+          <button type="button" class="btn" onclick="solicitarColeta()">SOLICITAR COLETA</button>
+        </form>
+      </section>
+
+      <!-- TELA 2: VISÃO DO COLETOR -->
+      <section id="screen-2" class="screen">
+        <h2>Rota do Dia — Ilha dos Valadares</h2>
+        <p class="subtitle">Progresso: 1 de 5 concluídas (20%)</p>
+
+        <div class="card pending">
+          <div class="status-title status-pending">PARADA #01 — PENDENTE (⊙)</div>
+          <p><strong>Rua José Antonio Cruz, 142 — Ilha dos Valadares</strong></p>
+          <p style="font-size:0.85rem; color:#555;">Ref.: Próximo ao Posto de Saúde</p>
+          <p style="font-size:0.85rem; margin-top:4px;"><strong>Material:</strong> Plástico e Papelão (~12 kg)</p>
+          <button class="btn btn-concluir" onclick="concluirParada(this)">✓ CONCLUIR COLETA</button>
+        </div>
+
+        <div class="card done">
+          <div class="status-title status-done">PARADA #02 — CONCLUÍDA (✓)</div>
+          <p><strong>Av. Sete de Setembro, 85 — Ilha dos Valadares</strong></p>
+          <p style="font-size:0.85rem; color:#555;">Material: Metal e Vidro (~8 kg)</p>
+          <p style="font-size:0.75rem; color:var(--success); margin-top:4px;">Status: Salvo no IndexedDB (Aguardando Sincronização)</p>
+        </div>
+      </section>
+
+      <!-- TELA 3: CONFIRMAÇÃO DE PROTOCOLO -->
+      <section id="screen-3" class="screen">
+        <div class="alert-box">
+          <span style="font-size:1.5rem; color:var(--success);">✓</span>
+          <div>
+            <strong>SOLICITAÇÃO REGISTRADA!</strong>
+            <p style="font-size:0.8rem;">Coleta incluída com sucesso no itinerário comunitário do bairro.</p>
+          </div>
+        </div>
+
+        <div class="protocol-box">
+          <p style="font-size:0.75rem; color:#666;">PROTOCOLO DE ATENDIMENTO</p>
+          <div class="protocol-number">#ECO-2026-89412</div>
+        </div>
+
+        <div class="details-list">
+          <p><strong>DETALHES DO AGENDAMENTO</strong></p>
+          <p>• <strong>Bairro:</strong> Ilha dos Valadares (Setor Norte)</p>
+          <p>• <strong>Endereço:</strong> Rua José Antonio Cruz, 142</p>
+          <p>• <strong>Previsão de Recolhimento:</strong> Amanhã até às 14:00h</p>
+          <p>• <strong>Resíduos Selecionados:</strong> Plástico (PET) e Papelão</p>
+          <p>• <strong>Status:</strong> Confirmado e Aguardando Coletor</p>
+        </div>
+
+        <button class="btn btn-secondary" onclick="alert('Protocolo copiado!')">📋 COPIAR PROTOCOLO</button>
+        <button class="btn" onclick="changeScreen('screen-1')">+ NOVA SOLICITAÇÃO</button>
+      </section>
+    </main>
+
+    <nav>
+      <button id="tab-1" class="active-tab" onclick="changeScreen('screen-1')">1. Agendar</button>
+      <button id="tab-2" onclick="changeScreen('screen-2')">2. Coletor</button>
+      <button id="tab-3" onclick="changeScreen('screen-3')">3. Confirmado</button>
+    </nav>
+  </div>
+
+  <script>
+    function changeScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-tab'));
+      
+      document.getElementById(screenId).classList.add('active');
+      
+      if(screenId === 'screen-1') document.getElementById('tab-1').classList.add('active-tab');
+      if(screenId === 'screen-2') document.getElementById('tab-2').classList.add('active-tab');
+      if(screenId === 'screen-3') document.getElementById('tab-3').classList.add('active-tab');
+    }
+
+    function solicitarColeta() {
+      const tel = document.getElementById('telefone');
+      if(tel.value.length < 14) {
+        tel.value = "(41) 98888-7766";
+        tel.classList.remove('input-error');
+      }
+      changeScreen('screen-3');
+    }
+
+    function concluirParada(btn) {
+      const card = btn.parentElement;
+      card.classList.remove('pending');
+      card.classList.add('done');
+      card.querySelector('.status-title').className = 'status-title status-done';
+      card.querySelector('.status-title').innerText = 'PARADA #01 — CONCLUÍDA (✓)';
+      btn.style.display = 'none';
+    }
+  </script>
+</body>
+</html>
