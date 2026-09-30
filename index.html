@@ -299,7 +299,15 @@
 
           <div class="form-group">
             <label for="telefone" style="color: var(--error);">Telefone para Contato (WhatsApp) *</label>
-            <input type="text" id="telefone" class="input-error" value="(41) 9" required />
+            <input 
+              type="tel" 
+              id="telefone" 
+              class="input-error" 
+              value="(41) 9" 
+              maxlength="15" 
+              inputmode="numeric"
+              required 
+            />
             <div class="error-msg">⚠ (Δ) Informe um telefone com DDD para contato (11 dígitos).</div>
           </div>
 
